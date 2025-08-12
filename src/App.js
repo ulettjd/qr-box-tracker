@@ -1,6 +1,5 @@
-
-import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, useNavigate, useParams } from 'react-router-dom';
+import React, { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import QRScanner from './components/QRScanner';
 import BoxForm from './components/BoxForm';
 import Dashboard from './components/Dashboard';
