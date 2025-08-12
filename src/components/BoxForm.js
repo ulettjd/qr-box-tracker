@@ -20,7 +20,7 @@ const ROOMS = [
 ];
 
 const BoxForm = ({ boxes, updateBox }) => {
-  const { boxId } = useParams();
+const { company, moveId, boxId } = useParams();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     room: '',
@@ -70,11 +70,14 @@ const BoxForm = ({ boxes, updateBox }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const boxData = {
-      ...formData,
-      boxId,
-      lastUpdated: new Date().toISOString()
-    };
+const boxData = {
+  ...formData,
+  boxId: `${company}-${moveId}-${boxId}`,
+  company,
+  moveId,
+  originalBoxId: boxId,
+  lastUpdated: new Date().toISOString()
+};
     updateBox(boxId, boxData);
     
     // Show success message and redirect
