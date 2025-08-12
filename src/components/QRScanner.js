@@ -33,7 +33,7 @@ const QRScanner = () => {
           
           // Extract box ID from QR code (assuming format like "BOX-001" or just "001")
           const boxId = result.data.replace('BOX-', '');
-          navigate(`/box/${boxId}`);
+        navigate(`/MG/JDU/${boxId}`);
         },
         {
           returnDetailedScanResult: true,
@@ -60,7 +60,7 @@ const QRScanner = () => {
 
   const handleManualEntry = () => {
     if (manualBoxId.trim()) {
-      navigate(`/box/${manualBoxId.trim()}`);
+    navigate(`/MG/JDU/${manualBoxId.trim()}`);
     }
   };
 
