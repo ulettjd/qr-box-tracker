@@ -42,9 +42,16 @@ const Dashboard = ({ boxes }) => {
     navigate('/');
   };
 
-  const editBox = (boxId) => {
-    navigate(`/box/${boxId}`);
-  };
+const editBox = (boxId) => {
+  // Extract the original parts from the stored boxId (MG-JDU-001)
+  const parts = boxId.split('-');
+  if (parts.length === 3) {
+    navigate(`/${parts[0]}/${parts[1]}/${parts[2]}`);
+  } else {
+    // Fallback for old format
+    navigate(`/MG/JDU/${boxId}`);
+  }
+};
 
   return (
     <div className="dashboard">
