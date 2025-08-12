@@ -68,6 +68,19 @@ const { company, moveId, boxId } = useParams();
     }
   };
 
+  const removeImage = () => {
+  setImagePreview(null);
+  setFormData(prev => ({
+    ...prev,
+    image: null
+  }));
+  // Clear the file input
+  const fileInput = document.getElementById('image');
+  if (fileInput) {
+    fileInput.value = '';
+  }
+};
+
   const handleSubmit = (e) => {
     e.preventDefault();
 const boxData = {
@@ -172,11 +185,18 @@ const boxData = {
             onChange={handleImageChange}
             className="file-input"
           />
-          {imagePreview && (
-            <div className="image-preview">
-              <img src={imagePreview} alt="Box preview" />
-            </div>
-          )}
+      {imagePreview && (
+          <div className="image-preview">
+          <img src={imagePreview} alt="Box preview" />
+          <button 
+            type="button" 
+            onClick={removeImage} 
+            className="remove-image-button"
+     >
+      🗑️ Remove Photo
+    </button>
+  </div>
+)}
         </div>
 
         <div className="form-group checkbox-group">
