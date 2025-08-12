@@ -29,10 +29,10 @@ function App() {
       <div className="App">
         <Routes>
           <Route path="/" element={<QRScanner />} />
-          <Route 
-            path="/box/:boxId" 
-            element={<BoxForm boxes={boxes} updateBox={updateBox} />} 
-          />
+          <Route
+            path="/:company/:moveId/:boxId"
+            element={<BoxForm boxes={boxes} updateBox={updateBox} />}
+        />
           <Route 
             path="/dashboard" 
             element={<Dashboard boxes={boxes} />} 
