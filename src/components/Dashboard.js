@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -16,6 +15,39 @@ const Dashboard = ({ boxes }) => {
   const packedBoxes = boxArray.filter(box => box.packed).length;
   const fragileBoxes = boxArray.filter(box => box.fragile).length;
   const packingProgress = totalBoxes > 0 ? Math.round((packedBoxes / totalBoxes) * 100) : 0;
+
+  // Calculate move status based on box statuses
+  const calculateMoveStatus = () => {
+    if (totalBoxes === 0) return { phase: 'PACKING', step: 0 };
+    
+    const statusCounts = boxArray.reduce((acc, box) => {
+      const status = box.status || 'PACKED';
+      acc[status] = (acc[status] || 0) + 1;
+      return acc;
+    }, {});
+
+    const packedCount = statusCounts.PACKED || 0;
+    const verifiedCount = statusCounts.VERIFIED || 0;
+    const loadedCount = statusCounts.LOADED || 0;
+    const deliveredCount = statusCounts.DELIVERED || 0;
+
+    // Determine current phase
+    if (deliveredCount === totalBoxes) {
+      return { phase: 'COMPLETE', step: 5 };
+    } else if (deliveredCount > 0) {
+      return { phase: 'UNLOADING', step: 4 };
+    } else if (loadedCount === totalBoxes) {
+      return { phase: 'IN_TRANSIT', step: 3 };
+    } else if (loadedCount > 0) {
+      return { phase: 'LOADING', step: 2 };
+    } else if (packedCount === totalBoxes) {
+      return { phase: 'PACKED', step: 1 };
+    } else {
+      return { phase: 'PACKING', step: 0 };
+    }
+  };
+
+  const moveStatus = calculateMoveStatus();
 
   // Get unique rooms for filter
   const rooms = [...new Set(boxArray.map(box => box.room).filter(Boolean))];
@@ -42,16 +74,25 @@ const Dashboard = ({ boxes }) => {
     navigate('/');
   };
 
-const editBox = (boxId) => {
-  // Extract the original parts from the stored boxId (MG-JDU-001)
-  const parts = boxId.split('-');
-  if (parts.length === 3) {
-    navigate(`/${parts[0]}/${parts[1]}/${parts[2]}`);
-  } else {
-    // Fallback for old format
-    navigate(`/MG/JDU/${boxId}`);
-  }
-};
+  const editBox = (boxId) => {
+    // Extract the original parts from the stored boxId (MG-JDU-001)
+    const parts = boxId.split('-');
+    if (parts.length === 3) {
+      navigate(`/${parts[0]}/${parts[1]}/${parts[2]}`);
+    } else {
+      // Fallback for old format
+      navigate(`/MG/JDU/${boxId}`);
+    }
+  };
+
+  const moveSteps = [
+    { id: 'PACKING', label: 'Packing', step: 0 },
+    { id: 'PACKED', label: 'Packed', step: 1 },
+    { id: 'LOADING', label: 'Loading', step: 2 },
+    { id: 'IN_TRANSIT', label: 'In Transit', step: 3 },
+    { id: 'UNLOADING', label: 'Unloading', step: 4 },
+    { id: 'COMPLETE', label: 'Complete', step: 5 }
+  ];
 
   return (
     <div className="dashboard">
@@ -82,7 +123,7 @@ const editBox = (boxId) => {
         </div>
       </div>
 
-      {/* Progress Bar */}
+      {/* Packing Progress Bar */}
       <div className="progress-section">
         <h3>Packing Progress</h3>
         <div className="progress-bar">
@@ -92,6 +133,30 @@ const editBox = (boxId) => {
           ></div>
         </div>
         <p>{packedBoxes} of {totalBoxes} boxes packed</p>
+      </div>
+
+      {/* Move Status Timeline */}
+      <div className="move-status-section">
+        <h3>Move Status</h3>
+        <div className="move-timeline">
+          {moveSteps.map((step, index) => (
+            <div 
+              key={step.id}
+              className={`timeline-step ${
+                step.step < moveStatus.step ? 'complete' : 
+                step.step === moveStatus.step ? 'active' : 'pending'
+              }`}
+            >
+              <div className="step-circle">
+                {step.step < moveStatus.step ? '✓' : step.step + 1}
+              </div>
+              <div className="step-label">{step.label}</div>
+            </div>
+          ))}
+        </div>
+        <div className="current-move-status">
+          Current Status: <strong>{moveStatus.phase.replace('_', ' ')}</strong>
+        </div>
       </div>
 
       {/* Filters */}
@@ -161,10 +226,13 @@ const editBox = (boxId) => {
             {filteredBoxes.map(box => (
               <div key={box.id} className="box-card" onClick={() => editBox(box.id)}>
                 <div className="box-header">
-                  <h4>Box #{box.id}</h4>
+                  <h4>Box #{box.originalBoxId || box.id}</h4>
                   <div className="box-status">
                     {box.packed && <span className="status-badge packed">✅ Packed</span>}
                     {box.fragile && <span className="status-badge fragile">🔴 Fragile</span>}
+                    {box.status && <span className={`status-badge status-${box.status.toLowerCase()}`}>
+                      {box.status}
+                    </span>}
                   </div>
                 </div>
                 
