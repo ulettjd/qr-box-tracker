@@ -1,4 +1,3 @@
-// src/components/QRScanner.js
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import QrScanner from 'qr-scanner';
@@ -10,6 +9,7 @@ const QRScanner = () => {
   const [scanning, setScanning] = useState(false);
   const [error, setError] = useState('');
   const [manualBoxId, setManualBoxId] = useState('');
+  const [moverMode, setMoverMode] = useState(false);
 
   useEffect(() => {
     return () => {
@@ -33,7 +33,13 @@ const QRScanner = () => {
           
           // Extract box ID from QR code (assuming format like "BOX-001" or just "001")
           const boxId = result.data.replace('BOX-', '');
-        navigate(`/MG/JDU/${boxId}`);
+          
+          // Navigate based on mode
+          if (moverMode) {
+            navigate(`/crew/MG/JDU/${boxId}`);
+          } else {
+            navigate(`/MG/JDU/${boxId}`);
+          }
         },
         {
           returnDetailedScanResult: true,
@@ -60,7 +66,11 @@ const QRScanner = () => {
 
   const handleManualEntry = () => {
     if (manualBoxId.trim()) {
-    navigate(`/MG/JDU/${manualBoxId.trim()}`);
+      if (moverMode) {
+        navigate(`/crew/MG/JDU/${manualBoxId.trim()}`);
+      } else {
+        navigate(`/MG/JDU/${manualBoxId.trim()}`);
+      }
     }
   };
 
@@ -68,12 +78,16 @@ const QRScanner = () => {
     navigate('/dashboard');
   };
 
+  const toggleMode = () => {
+    setMoverMode(!moverMode);
+  };
+
   return (
     <div className="qr-scanner">
-
-      <div className="mg-header">
+      <div className={`mg-header ${moverMode ? 'mover-mode' : ''}`}>
         <img src="/mg-moving-logo.png" alt="MG Moving Services" className="company-logo" />
         <h1>Box Tracker</h1>
+        <p className="mode-indicator">{moverMode ? '(Crew)' : '(Customer)'}</p>
         <p>Scan your QR code to track your box</p>
       </div>
 
@@ -96,6 +110,12 @@ const QRScanner = () => {
               ⏹️ Stop Scanning
             </button>
           )}
+        </div>
+
+        <div className="mode-toggle">
+          <button onClick={toggleMode} className="toggle-mode-button">
+            {moverMode ? 'Switch to Customer Mode' : 'Switch to Crew Mode'}
+          </button>
         </div>
       </div>
 
@@ -120,6 +140,7 @@ const QRScanner = () => {
           📊 View Dashboard
         </button>
       </div>
+
       <div className="powered-by">
         Powered by QTrace
       </div>
