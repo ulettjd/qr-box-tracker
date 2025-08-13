@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import QRScanner from './components/QRScanner';
+import CrewScanner from './components/CrewScanner';
 import BoxForm from './components/BoxForm';
 import Dashboard from './components/Dashboard';
 import './App.css';
@@ -29,10 +30,11 @@ function App() {
       <div className="App">
         <Routes>
           <Route path="/" element={<QRScanner />} />
-          <Route
-            path="/:company/:moveId/:boxId"
-            element={<BoxForm boxes={boxes} updateBox={updateBox} />}
-        />
+          <Route path="/crew" element={<CrewScanner />} />
+          <Route 
+            path="/:company/:moveId/:boxId" 
+            element={<BoxForm boxes={boxes} updateBox={updateBox} />} 
+          />
           <Route 
             path="/dashboard" 
             element={<Dashboard boxes={boxes} />} 
@@ -44,4 +46,3 @@ function App() {
 }
 
 export default App;
-
