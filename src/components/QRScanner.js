@@ -9,7 +9,6 @@ const QRScanner = () => {
   const [scanning, setScanning] = useState(false);
   const [error, setError] = useState('');
   const [manualBoxId, setManualBoxId] = useState('');
-  const [moverMode, setMoverMode] = useState(false);
 
   useEffect(() => {
     return () => {
@@ -33,13 +32,7 @@ const QRScanner = () => {
           
           // Extract box ID from QR code (assuming format like "BOX-001" or just "001")
           const boxId = result.data.replace('BOX-', '');
-          
-          // Navigate based on mode
-          if (moverMode) {
-            navigate(`/crew/MG/JDU/${boxId}`);
-          } else {
-            navigate(`/MG/JDU/${boxId}`);
-          }
+          navigate(`/MG/JDU/${boxId}`);
         },
         {
           returnDetailedScanResult: true,
@@ -66,11 +59,7 @@ const QRScanner = () => {
 
   const handleManualEntry = () => {
     if (manualBoxId.trim()) {
-      if (moverMode) {
-        navigate(`/crew/MG/JDU/${manualBoxId.trim()}`);
-      } else {
-        navigate(`/MG/JDU/${manualBoxId.trim()}`);
-      }
+      navigate(`/MG/JDU/${manualBoxId.trim()}`);
     }
   };
 
@@ -78,20 +67,16 @@ const QRScanner = () => {
     navigate('/dashboard');
   };
 
-const toggleMode = () => {
-  if (moverMode) {
-    setMoverMode(false);
-  } else {
+  const switchToCrewMode = () => {
     navigate('/crew');
-  }
-};
+  };
 
   return (
     <div className="qr-scanner">
-      <div className={`mg-header ${moverMode ? 'mover-mode' : ''}`}>
+      <div className="mg-header">
         <img src="/mg-moving-logo.png" alt="MG Moving Services" className="company-logo" />
         <h1>Box Tracker</h1>
-        <p className="mode-indicator">{moverMode ? '(Crew)' : '(Customer)'}</p>
+        <p className="mode-indicator">(Customer)</p>
         <p>Scan your QR code to track your box</p>
       </div>
 
@@ -117,8 +102,8 @@ const toggleMode = () => {
         </div>
 
         <div className="mode-toggle">
-          <button onClick={toggleMode} className="toggle-mode-button">
-            {moverMode ? 'Switch to Customer Mode' : 'Switch to Crew Mode'}
+          <button onClick={switchToCrewMode} className="toggle-mode-button">
+            Switch to Crew Mode
           </button>
         </div>
       </div>
