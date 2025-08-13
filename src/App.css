@@ -568,3 +568,57 @@ body {
 .radio-text {
   font-size: 16px;
 }
+
+/* MG Moving Branding */
+.mg-header {
+  text-align: center;
+  margin-bottom: 30px;
+  padding: 20px;
+  background: linear-gradient(135deg, #1e4d8c 0%, #2a5aa0 100%);
+  border-radius: 15px;
+  color: white;
+  box-shadow: 0 4px 15px rgba(30, 77, 140, 0.3);
+}
+
+.company-logo {
+  max-height: 80px;
+  max-width: 200px;
+  margin-bottom: 15px;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+}
+
+.mg-header h1 {
+  color: white;
+  font-size: 2.2rem;
+  margin: 10px 0;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.mg-header p {
+  color: #e8f4fd;
+  font-size: 1.1rem;
+  margin: 0;
+}
+
+.powered-by {
+  text-align: center;
+  margin-top: 40px;
+  padding: 15px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  color: #666;
+  font-size: 14px;
+  border-top: 3px solid #ff6b35;
+}
+
+/* Update scan button with MG colors */
+.scan-button {
+  background: linear-gradient(135deg, #ff6b35 0%, #e55a2b 100%);
+  box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
+}
+
+.scan-button:hover {
+  background: linear-gradient(135deg, #e55a2b 0%, #cc4e24 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 107, 53, 0.4);
+}
