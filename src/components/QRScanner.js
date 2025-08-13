@@ -70,9 +70,11 @@ const QRScanner = () => {
 
   return (
     <div className="qr-scanner">
-      <div className="header">
-        <h1>📦 QR Box Tracker</h1>
-        <p>Scan a QR code to track your moving box</p>
+
+      <div className="mg-header">
+        <img src="/mg-moving-logo.png" alt="MG Moving Services" className="company-logo" />
+        <h1>Box Tracker</h1>
+        <p>Scan your QR code to track your box</p>
       </div>
 
       <div className="scanner-container">
@@ -117,6 +119,9 @@ const QRScanner = () => {
         <button onClick={goToDashboard} className="dashboard-button">
           📊 View Dashboard
         </button>
+      </div>
+      <div className="powered-by">
+        Powered by QTrace
       </div>
     </div>
   );
