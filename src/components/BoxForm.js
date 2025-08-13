@@ -136,20 +136,33 @@ const boxData = {
           </select>
         </div>
 
-        <div className="form-group checkbox-group">
-          <label className="checkbox-label">
-            <input
-              type="checkbox"
-              name="fragile"
-              checked={formData.fragile}
-              onChange={handleInputChange}
-            />
-            <span className="checkbox-text">
-              {formData.fragile ? '🔴 FRAGILE' : '📦 Not Fragile'}
-            </span>
-          </label>
-        </div>
-
+<div className="form-group">
+  <label>Fragile Status *</label>
+  <div className="radio-group">
+    <label className="radio-label">
+      <input
+        type="radio"
+        name="fragile"
+        value="false"
+        checked={formData.fragile === false}
+        onChange={(e) => setFormData(prev => ({ ...prev, fragile: false }))}
+      />
+      <span className="radio-text">📦 Not Fragile</span>
+    </label>
+    
+    <label className="radio-label">
+      <input
+        type="radio"
+        name="fragile"
+        value="true"
+        checked={formData.fragile === true}
+        onChange={(e) => setFormData(prev => ({ ...prev, fragile: true }))}
+      />
+      <span className="radio-text">🔴 FRAGILE</span>
+    </label>
+  </div>
+</div>
+        
         <div className="form-group">
           <label htmlFor="description">Box Description</label>
           <input
