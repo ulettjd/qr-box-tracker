@@ -78,9 +78,13 @@ const QRScanner = () => {
     navigate('/dashboard');
   };
 
-  const toggleMode = () => {
-    setMoverMode(!moverMode);
-  };
+const toggleMode = () => {
+  if (moverMode) {
+    setMoverMode(false);
+  } else {
+    navigate('/crew');
+  }
+};
 
   return (
     <div className="qr-scanner">
