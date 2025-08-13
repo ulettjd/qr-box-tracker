@@ -819,3 +819,141 @@ body {
 .toggle-mode-button:hover {
   background-color: #555;
 }
+
+/* Move Status Timeline */
+.move-status-section {
+  background: white;
+  padding: 25px;
+  border-radius: 10px;
+  margin-bottom: 30px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.move-timeline {
+  display: flex;
+  justify-content: space-between;
+  margin: 20px 0;
+  position: relative;
+  padding: 20px 0;
+}
+
+.timeline-step {
+  flex: 1;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+
+.timeline-step:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  top: 20px;
+  right: -50%;
+  width: 100%;
+  height: 3px;
+  background: #ddd;
+  z-index: 0;
+}
+
+.timeline-step.complete:not(:last-child)::after {
+  background: #1e4d8c;
+}
+
+.timeline-step.active:not(:last-child)::after {
+  background: linear-gradient(90deg, #1e4d8c 50%, #ddd 50%);
+}
+
+.step-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 3px solid #ddd;
+  background: #fff;
+  margin: 0 auto 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 2;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.timeline-step.complete .step-circle {
+  background: #1e4d8c;
+  border-color: #1e4d8c;
+  color: #fff;
+}
+
+.timeline-step.active .step-circle {
+  border-color: #ff6b35;
+  border-width: 4px;
+  background: #fff;
+  color: #ff6b35;
+  animation: pulse 2s infinite;
+}
+
+.timeline-step.pending .step-circle {
+  background: #f8f9fa;
+  border-color: #ddd;
+  color: #999;
+}
+
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(255, 107, 53, 0.4); }
+  70% { box-shadow: 0 0 0 10px rgba(255, 107, 53, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(255, 107, 53, 0); }
+}
+
+.step-label {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+  color: #666;
+}
+
+.timeline-step.complete .step-label {
+  color: #1e4d8c;
+}
+
+.timeline-step.active .step-label {
+  color: #ff6b35;
+}
+
+.current-move-status {
+  text-align: center;
+  margin-top: 15px;
+  padding: 10px;
+  background: #f8f9fa;
+  border-radius: 5px;
+  font-size: 16px;
+  color: #2c3e50;
+}
+
+/* Mobile responsive timeline */
+@media (max-width: 768px) {
+  .move-timeline {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  
+  .timeline-step {
+    flex: 0 0 calc(33.33% - 10px);
+    margin-bottom: 20px;
+  }
+  
+  .timeline-step:not(:last-child)::after {
+    display: none;
+  }
+  
+  .step-circle {
+    width: 35px;
+    height: 35px;
+    font-size: 12px;
+  }
+  
+  .step-label {
+    font-size: 10px;
+  }
+}
