@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const Dashboard = ({ boxes }) => {
+const Dashboard = ({ boxes, updateBox }) => {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const [filterRoom, setFilterRoom] = useState('');
@@ -27,6 +27,7 @@ const Dashboard = ({ boxes }) => {
     }, {});
 
     const packedCount = statusCounts.PACKED || 0;
+    const verifiedCount = statusCounts.VERIFIED || 0;
     const loadedCount = statusCounts.LOADED || 0;
     const deliveredCount = statusCounts.DELIVERED || 0;
 
@@ -81,6 +82,22 @@ const Dashboard = ({ boxes }) => {
     } else {
       // Fallback for old format
       navigate(`/MG/JDU/${boxId}`);
+    }
+  };
+
+  const deleteBox = (boxId, event) => {
+    event.stopPropagation(); // Prevent box card click when deleting
+    
+    if (window.confirm('Are you sure you want to delete this box? This action cannot be undone.')) {
+      // Create new boxes object without the deleted box
+      const newBoxes = { ...boxes };
+      delete newBoxes[boxId];
+      
+      // Update localStorage
+      localStorage.setItem('boxes', JSON.stringify(newBoxes));
+      
+      // Force page refresh to update state
+      window.location.reload();
     }
   };
 
@@ -223,16 +240,30 @@ const Dashboard = ({ boxes }) => {
         ) : (
           <div className="boxes-grid">
             {filteredBoxes.map(box => (
-              <div key={box.id} className={`box-card ${box.fragile ? 'fragile-outline' : ''}`} onClick={() => editBox(box.id)}>
+              <div 
+                key={box.id} 
+                className={`box-card ${box.fragile ? 'fragile-outline' : ''}`} 
+                onClick={() => editBox(box.id)}
+              >
                 <div className="box-header">
                   <h4>Box #{box.originalBoxId || box.id}</h4>
-                  <div className="box-status">
-                    {box.packed && <span className="status-badge packed">✅ Packed</span>}
-                    {box.fragile && <span className="status-badge fragile">🔴 Fragile</span>}
-                    {box.status && <span className={`status-badge status-${box.status.toLowerCase()}`}>
-                      {box.status}
-                    </span>}
+                  <div className="box-actions">
+                    <button 
+                      className="delete-button"
+                      onClick={(e) => deleteBox(box.id, e)}
+                      title="Delete box"
+                    >
+                      ✕
+                    </button>
                   </div>
+                </div>
+                
+                <div className="box-status">
+                  {box.packed && <span className="status-badge packed">✅ Packed</span>}
+                  {box.fragile && <span className="status-badge fragile">🔴 Fragile</span>}
+                  {box.status && <span className={`status-badge status-${box.status.toLowerCase()}`}>
+                    {box.status}
+                  </span>}
                 </div>
                 
                 {box.image && (
