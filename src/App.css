@@ -968,3 +968,60 @@ body {
   border-color: #c0392b;
   box-shadow: 0 0 0 1px #c0392b, 0 6px 20px rgba(231, 76, 60, 0.3);
 }
+
+/* Red outline for fragile boxes */
+.box-card.fragile-outline {
+  border: 3px solid #e74c3c;
+  box-shadow: 0 0 0 1px #e74c3c, 0 4px 15px rgba(231, 76, 60, 0.2);
+}
+
+.box-card.fragile-outline:hover {
+  border-color: #c0392b;
+  box-shadow: 0 0 0 1px #c0392b, 0 6px 20px rgba(231, 76, 60, 0.3);
+}
+
+/* Delete button styles */
+.box-actions {
+  display: flex;
+  gap: 5px;
+}
+
+.delete-button {
+  background: #ff4757;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  font-size: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  font-weight: bold;
+}
+
+.delete-button:hover {
+  background: #ff3742;
+  transform: scale(1.1);
+}
+
+.delete-button:active {
+  transform: scale(0.95);
+}
+
+/* Update box-header to space items properly */
+.box-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 15px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.box-header h4 {
+  margin: 0;
+  flex: 1;
+}
