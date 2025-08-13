@@ -1,5 +1,3 @@
-
-
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
@@ -20,7 +18,7 @@ const ROOMS = [
 ];
 
 const BoxForm = ({ boxes, updateBox }) => {
-const { company, moveId, boxId } = useParams();
+  const { company, moveId, boxId } = useParams();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     room: '',
@@ -29,20 +27,46 @@ const { company, moveId, boxId } = useParams();
     contents: '',
     image: null,
     packed: false,
+    status: 'PACKED',
     dateCreated: new Date().toISOString()
   });
 
   const [imagePreview, setImagePreview] = useState(null);
+  const [existingBoxKey, setExistingBoxKey] = useState(null);
 
   useEffect(() => {
-    // Load existing box data if it exists
-    if (boxes[boxId]) {
-      setFormData(boxes[boxId]);
-      if (boxes[boxId].image) {
-        setImagePreview(boxes[boxId].image);
+    // Find existing box by looking for matching originalBoxId, company, and moveId
+    const foundBoxKey = Object.keys(boxes).find(key => {
+      const box = boxes[key];
+      return (
+        box.originalBoxId === boxId && 
+        box.company === company && 
+        box.moveId === moveId
+      ) || key === `${company}-${moveId}-${boxId}`;
+    });
+
+    if (foundBoxKey && boxes[foundBoxKey]) {
+      // Load existing box data
+      const existingBox = boxes[foundBoxKey];
+      setFormData(existingBox);
+      setExistingBoxKey(foundBoxKey);
+      
+      if (existingBox.image) {
+        setImagePreview(existingBox.image);
       }
+    } else {
+      // Create new box with proper structure
+      const newBoxKey = `${company}-${moveId}-${boxId}`;
+      setExistingBoxKey(newBoxKey);
+      setFormData(prev => ({
+        ...prev,
+        boxId: newBoxKey,
+        company,
+        moveId,
+        originalBoxId: boxId,
+      }));
     }
-  }, [boxId, boxes]);
+  }, [boxId, boxes, company, moveId]);
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -69,29 +93,34 @@ const { company, moveId, boxId } = useParams();
   };
 
   const removeImage = () => {
-  setImagePreview(null);
-  setFormData(prev => ({
-    ...prev,
-    image: null
-  }));
-  // Clear the file input
-  const fileInput = document.getElementById('image');
-  if (fileInput) {
-    fileInput.value = '';
-  }
-};
+    setImagePreview(null);
+    setFormData(prev => ({
+      ...prev,
+      image: null
+    }));
+    // Clear the file input
+    const fileInput = document.getElementById('image');
+    if (fileInput) {
+      fileInput.value = '';
+    }
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-const boxData = {
-  ...formData,
-  boxId: `${company}-${moveId}-${boxId}`,
-  company,
-  moveId,
-  originalBoxId: boxId,
-  lastUpdated: new Date().toISOString()
-};
-    updateBox(boxId, boxData);
+    
+    // Ensure we have the proper structure
+    const boxData = {
+      ...formData,
+      boxId: existingBoxKey,
+      company,
+      moveId,
+      originalBoxId: boxId,
+      lastUpdated: new Date().toISOString(),
+      lastUpdatedBy: 'CUSTOMER'
+    };
+
+    // Update using the existing key (or new key if it's a new box)
+    updateBox(existingBoxKey, boxData);
     
     // Show success message and redirect
     alert('Box information saved successfully!');
@@ -136,33 +165,33 @@ const boxData = {
           </select>
         </div>
 
-<div className="form-group">
-  <label>Fragile Status *</label>
-  <div className="radio-group">
-    <label className="radio-label">
-      <input
-        type="radio"
-        name="fragile"
-        value="false"
-        checked={formData.fragile === false}
-        onChange={(e) => setFormData(prev => ({ ...prev, fragile: false }))}
-      />
-      <span className="radio-text">📦 Not Fragile</span>
-    </label>
-    
-    <label className="radio-label">
-      <input
-        type="radio"
-        name="fragile"
-        value="true"
-        checked={formData.fragile === true}
-        onChange={(e) => setFormData(prev => ({ ...prev, fragile: true }))}
-      />
-      <span className="radio-text">🔴 FRAGILE</span>
-    </label>
-  </div>
-</div>
-        
+        <div className="form-group">
+          <label>Fragile Status *</label>
+          <div className="radio-group">
+            <label className="radio-label">
+              <input
+                type="radio"
+                name="fragile"
+                value="false"
+                checked={formData.fragile === false}
+                onChange={(e) => setFormData(prev => ({ ...prev, fragile: false }))}
+              />
+              <span className="radio-text">📦 Not Fragile</span>
+            </label>
+            
+            <label className="radio-label">
+              <input
+                type="radio"
+                name="fragile"
+                value="true"
+                checked={formData.fragile === true}
+                onChange={(e) => setFormData(prev => ({ ...prev, fragile: true }))}
+              />
+              <span className="radio-text">🔴 FRAGILE</span>
+            </label>
+          </div>
+        </div>
+
         <div className="form-group">
           <label htmlFor="description">Box Description</label>
           <input
@@ -198,32 +227,45 @@ const boxData = {
             onChange={handleImageChange}
             className="file-input"
           />
-      {imagePreview && (
-          <div className="image-preview">
-          <img src={imagePreview} alt="Box preview" />
-          <button 
-            type="button" 
-            onClick={removeImage} 
-            className="remove-image-button"
-     >
-      🗑️ Remove Photo
-    </button>
-  </div>
-)}
+          {imagePreview && (
+            <div className="image-preview">
+              <img src={imagePreview} alt="Box preview" />
+              <button 
+                type="button" 
+                onClick={removeImage} 
+                className="remove-image-button"
+              >
+                🗑️ Remove Photo
+              </button>
+            </div>
+          )}
         </div>
 
-        <div className="form-group checkbox-group">
-          <label className="checkbox-label">
-            <input
-              type="checkbox"
-              name="packed"
-              checked={formData.packed}
-              onChange={handleInputChange}
-            />
-            <span className="checkbox-text">
-              {formData.packed ? '✅ Packed' : '📦 Not Packed Yet'}
-            </span>
-          </label>
+        <div className="form-group">
+          <label>Packing Status *</label>
+          <div className="radio-group">
+            <label className="radio-label">
+              <input
+                type="radio"
+                name="packed"
+                value="false"
+                checked={formData.packed === false}
+                onChange={(e) => setFormData(prev => ({ ...prev, packed: false }))}
+              />
+              <span className="radio-text">📦 Not Packed Yet</span>
+            </label>
+            
+            <label className="radio-label">
+              <input
+                type="radio"
+                name="packed"
+                value="true"
+                checked={formData.packed === true}
+                onChange={(e) => setFormData(prev => ({ ...prev, packed: true }))}
+              />
+              <span className="radio-text">✅ Packed</span>
+            </label>
+          </div>
         </div>
 
         <div className="form-actions">
