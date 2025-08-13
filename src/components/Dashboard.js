@@ -27,7 +27,6 @@ const Dashboard = ({ boxes, updateBox }) => {
     }, {});
 
     const packedCount = statusCounts.PACKED || 0;
-    const verifiedCount = statusCounts.VERIFIED || 0;
     const loadedCount = statusCounts.LOADED || 0;
     const deliveredCount = statusCounts.DELIVERED || 0;
 
