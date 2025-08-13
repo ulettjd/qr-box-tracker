@@ -622,3 +622,33 @@ body {
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(255, 107, 53, 0.4);
 }
+
+.mg-header.mover-mode {
+  background: linear-gradient(135deg, #ff6b35 0%, #e55a2b 100%);
+}
+
+.mode-indicator {
+  font-size: 0.9rem;
+  font-weight: bold;
+  margin: 5px 0;
+  color: #e8f4fd;
+}
+
+.mode-toggle {
+  margin-top: 15px;
+}
+
+.toggle-mode-button {
+  padding: 10px 20px;
+  background-color: #666;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s;
+}
+
+.toggle-mode-button:hover {
+  background-color: #555;
+}
