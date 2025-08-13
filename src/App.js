@@ -40,9 +40,9 @@ function App() {
             path="/crew-status/:company/:moveId/:boxId" 
             element={<CrewBoxStatus boxes={boxes} updateBox={updateBox} />} 
           />
-          <Route 
+          <Route
             path="/dashboard" 
-            element={<Dashboard boxes={boxes} />} 
+            element={<Dashboard boxes={boxes} updateBox={updateBox} />}
           />
         </Routes>
       </div>
