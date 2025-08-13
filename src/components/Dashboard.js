@@ -223,7 +223,7 @@ const Dashboard = ({ boxes }) => {
         ) : (
           <div className="boxes-grid">
             {filteredBoxes.map(box => (
-              <div key={box.id} className="box-card" onClick={() => editBox(box.id)}>
+              <div key={box.id} className={`box-card ${box.fragile ? 'fragile-outline' : ''}`} onClick={() => editBox(box.id)}>
                 <div className="box-header">
                   <h4>Box #{box.originalBoxId || box.id}</h4>
                   <div className="box-status">
