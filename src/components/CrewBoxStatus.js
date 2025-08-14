@@ -12,19 +12,8 @@ const CrewBoxStatus = ({ boxes, updateBox }) => {
     if (boxes[fullBoxId]) {
       setBoxData(boxes[fullBoxId]);
     } else {
-      // Create basic box entry if it doesn't exist
-      setBoxData({
-        boxId: fullBoxId,
-        company,
-        moveId,
-        originalBoxId: boxId,
-        status: 'PACKED', // Default status
-        room: '',
-        description: '',
-        contents: '',
-        fragile: false,
-        dateCreated: new Date().toISOString()
-      });
+      // Box doesn't exist - crew can't create boxes
+      setBoxData(null);
     }
   }, [fullBoxId, boxes, company, moveId, boxId]);
 
@@ -46,8 +35,28 @@ const CrewBoxStatus = ({ boxes, updateBox }) => {
     navigate('/crew');
   };
 
-  if (!boxData) {
-    return <div>Loading...</div>;
+  if (boxData === null) {
+    return (
+      <div className="crew-box-status">
+        <div className="mg-header mover-mode">
+          <img src="/mg-moving-logo.png" alt="MG Moving Services" className="company-logo" />
+          <h1>Box Not Found</h1>
+          <p className="mode-indicator">(Crew)</p>
+        </div>
+
+        <div className="box-not-found">
+          <h2>📦 Box #{boxId} Not Found</h2>
+          <p>This box hasn't been created yet. Only customers can create new boxes.</p>
+          <button onClick={() => navigate('/crew')} className="back-to-scanner-button">
+            ← Back to Scanner
+          </button>
+        </div>
+
+        <div className="powered-by">
+          Powered by QTrace
+        </div>
+      </div>
+    );
   }
 
   return (
