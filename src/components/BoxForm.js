@@ -21,15 +21,19 @@ const BoxForm = ({ boxes, updateBox }) => {
   const { company, moveId, boxId } = useParams();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    room: '',
-    fragile: false,
-    description: '',
-    contents: '',
-    image: null,
-    packed: false,
-    status: 'PACKED',
-    dateCreated: new Date().toISOString()
-  });
+  room: '',
+  fragile: false,
+  description: '',
+  contents: '',
+  itemType: 'BOX',
+  condition: '',
+  assemblyRequired: false,
+  protectionType: '',
+  image: null,
+  packed: false,
+  status: 'PACKED',
+  dateCreated: new Date().toISOString()
+});
 
   const [imagePreview, setImagePreview] = useState(null);
   const [existingBoxKey, setExistingBoxKey] = useState(null);
@@ -164,7 +168,23 @@ const BoxForm = ({ boxes, updateBox }) => {
             ))}
           </select>
         </div>
-
+            
+        <div className="form-group">
+          <label htmlFor="itemType">Item Type *</label>
+          <select
+            id="itemType"
+            name="itemType"
+            value={formData.itemType || 'BOX'}
+            onChange={handleInputChange}
+            required
+            className="select-input"
+          >
+            <option value="BOX">📦 Box</option>
+            <option value="FURNITURE">🪑 Furniture</option>
+            <option value="APPLIANCE">🔌 Appliance</option>
+          </select>
+        </div>
+              
         <div className="form-group">
           <label>Fragile Status *</label>
           <div className="radio-group">
@@ -205,18 +225,86 @@ const BoxForm = ({ boxes, updateBox }) => {
           />
         </div>
 
-        <div className="form-group">
-          <label htmlFor="contents">Contents List</label>
-          <textarea
-            id="contents"
-            name="contents"
-            value={formData.contents}
-            onChange={handleInputChange}
-            placeholder="List the items in this box..."
-            rows="4"
-            className="textarea-input"
-          />
-        </div>
+        {formData.itemType === 'BOX' && (
+          <div className="form-group">
+            <label htmlFor="contents">Contents List</label>
+            <textarea
+              id="contents"
+              name="contents"
+              value={formData.contents}
+              onChange={handleInputChange}
+              placeholder="List the items in this box..."
+              rows="4"
+              className="textarea-input"
+            />
+          </div>
+        )}
+
+        {(formData.itemType === 'FURNITURE' || formData.itemType === 'APPLIANCE') && (
+          <>
+            <div className="form-group">
+              <label htmlFor="condition">Condition *</label>
+              <select
+                id="condition"
+                name="condition"
+                value={formData.condition || ''}
+                onChange={handleInputChange}
+                required
+                className="select-input"
+              >
+                <option value="">Select condition</option>
+                <option value="EXCELLENT">Excellent</option>
+                <option value="GOOD">Good</option>
+                <option value="FAIR">Fair</option>
+                <option value="DAMAGED">Damaged</option>
+              </select>
+            </div>
+
+            <div className="form-group">
+              <label>Assembly Required</label>
+              <div className="radio-group">
+                <label className="radio-label">
+                  <input
+                    type="radio"
+                    name="assemblyRequired"
+                    value="false"
+                    checked={formData.assemblyRequired === false}
+                    onChange={(e) => setFormData(prev => ({ ...prev, assemblyRequired: false }))}
+                  />
+                  <span className="radio-text">No Assembly</span>
+                </label>
+                
+                <label className="radio-label">
+                  <input
+                    type="radio"
+                    name="assemblyRequired"
+                    value="true"
+                    checked={formData.assemblyRequired === true}
+                    onChange={(e) => setFormData(prev => ({ ...prev, assemblyRequired: true }))}
+                  />
+                  <span className="radio-text">🔧 Assembly Required</span>
+                </label>
+              </div>
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="protectionType">Protection/Wrapping</label>
+              <select
+                id="protectionType"
+                name="protectionType"
+                value={formData.protectionType || ''}
+                onChange={handleInputChange}
+                className="select-input"
+              >
+                <option value="">No special protection</option>
+                <option value="BLANKETS">Moving blankets</option>
+                <option value="BUBBLE_WRAP">Bubble wrap</option>
+                <option value="SHRINK_WRAP">Shrink wrap</option>
+                <option value="CARDBOARD">Cardboard protection</option>
+              </select>
+            </div>
+          </>
+        )}
 
           <div className="form-group">
             <label htmlFor="image">Box Photo (Coming Soon)</label>
