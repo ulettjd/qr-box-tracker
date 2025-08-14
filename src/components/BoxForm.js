@@ -213,14 +213,22 @@ const BoxForm = ({ boxes, updateBox }) => {
         </div>
 
         <div className="form-group">
-          <label htmlFor="description">Box Description</label>
+          <label htmlFor="description">
+            {formData.itemType === 'BOX' ? 'Box Description' : 
+            formData.itemType === 'FURNITURE' ? 'Furniture Description' :
+            'Item Description'}
+          </label>
           <input
             type="text"
             id="description"
             name="description"
             value={formData.description}
             onChange={handleInputChange}
-            placeholder="e.g., Kitchen dishes, Office supplies"
+            placeholder={
+              formData.itemType === 'BOX' ? "e.g., Kitchen dishes, Office supplies" :
+              formData.itemType === 'FURNITURE' ? "e.g., Dining table, Office chair" :
+              "e.g., Microwave, Refrigerator"
+              }
             className="text-input"
           />
         </div>
