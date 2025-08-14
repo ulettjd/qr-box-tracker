@@ -218,15 +218,18 @@ const BoxForm = ({ boxes, updateBox }) => {
           />
         </div>
 
-        <div className="form-group">
-          <label htmlFor="image">Box Photo (Optional)</label>
-          <input
-            type="file"
-            id="image"
-            accept="image/*"
-            onChange={handleImageChange}
-            className="file-input"
+          <div className="form-group">
+            <label htmlFor="image">Box Photo (Coming Soon)</label>
+              <input
+              type="file"
+               id="image"
+              accept="image/*"
+              onChange={handleImageChange}
+              className="file-input disabled"
+              disabled
           />
+          <p className="coming-soon-text">Photo upload will be available in a future update</p>
+
           {imagePreview && (
             <div className="image-preview">
               <img src={imagePreview} alt="Box preview" />
